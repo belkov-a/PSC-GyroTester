@@ -5,6 +5,7 @@
 #include "Menu.h"
 #include "24C_EEPROM.h"
 #include "adc.h"
+#include <stdlib.h>
 
 // Наименования блока управления
 // PSC_PELLETOR
@@ -33,6 +34,12 @@ uint8_t rx_byte[4] = {0,0,0,0};
 uint8_t tx_byte[5] = {0,0,0,0,0};
 uint8_t reg_bytes[32];
 uint8_t xyz[6];
+
+int16_t x, y, z;
+float x_f,y_f,z_f;
+int x_out, y_out, z_out;
+
+float temp = 0;
   
 int main(void)
 { 
@@ -41,14 +48,6 @@ int main(void)
 
   // Конфигурация системного таймера
   SystemClock_Config();
-  
-  HAL_Delay(500);
-
-  // Инициализация аналоговой части
-  //RTC_Init();
-  
-  // Инициализация системного таймера 
-  //SYS_TIM_Init();
   
   // Инициализация SPI дисплея
   TFT_SPI_Init();
@@ -61,161 +60,100 @@ int main(void)
   // Заливка дисплея фоном
   TFT_FillScreen(BACK_COLOR);
   
-  // Инициализация каналов АЦП
-  //ADC_Init();
+  HAL_Delay(500);
   
-  // Инициализация I2C внешней EEPROM
-  //EEPROM_I2C1_Init();
+  TFT_LED_Set_Brightness(100);
 
   // Инициализация I2C внешнего устройства
   I2C2_Init();
-
-  // Инициализация CAN
-  //CAN_Init();
-  
-  // Инициализация таймеров симисторов 
-  // - Насоса ГВС (TIM2_CH2)  - PB3
-  // - Шнек       (TIM3_CH1)  - PB4
-  // - Вентилятор (TIM3_CH2)  - PB5
-  //TIM2_HWSPump_Init();
-  //TIM3_Fan_Supply_Init();
-
-  // Инициализация таймера пищалки (TIM16_CH1) - PA6
-  //TIM16_Buzzer_Init();
   
   // Инициализация портов ввода/вывода
   GPIO_Init();
-
-  // Инициализация сторожевого таймера
-  //IWDG_Init();
   
   FLASH->KEYR = 0x45670123;
   FLASH->KEYR = 0xCDEF89AB;
-  
-  //FLASH_BLOCK();
- 
-  //EEPROM_CheckLicense();
   
   NEED_UPDATE_SET;
   NEED_UPDATE_HEAD_SET;
   NEED_UPDATE_SCROLL_SET;
   ADC_READ_FLAG_SET;
   
-  //EEPROM_ReadSettings();
-  reg_bytes[0] = ReadReg(WHO_AM_I);
-  
   WriteReg(CTRL_REG4,0x00);
   WriteReg(CTRL_REG1,0x0F);
-  
-  //reg_bytes[1] = ReadReg(CTRL_REG1);
-  
-  /*
-  
-  tx_byte[0] = FIFO_CTRL_REG;
-  HAL_I2C_Master_Transmit(&hi2c2,L3G4200D_ADDR,tx_byte,1,1000);
-  
-  HAL_I2C_Master_Receive(&hi2c2,L3G4200D_ADDR,rx_byte,1,1000);
-  reg_bytes[6] = rx_byte[0];
-  
-  tx_byte[0] = INT1_CFG;
-  HAL_I2C_Master_Transmit(&hi2c2,L3G4200D_ADDR,tx_byte,1,1000);
-  
-  HAL_I2C_Master_Receive(&hi2c2,L3G4200D_ADDR,rx_byte,1,1000);
-  reg_bytes[7] = rx_byte[0];
-  
-  tx_byte[0] = INT1_TSH_XH;
-  HAL_I2C_Master_Transmit(&hi2c2,L3G4200D_ADDR,tx_byte,1,1000);
-  
-  HAL_I2C_Master_Receive(&hi2c2,L3G4200D_ADDR,rx_byte,1,1000);
-  reg_bytes[8] = rx_byte[0];
-  
-  tx_byte[0] = INT1_TSH_XL;
-  HAL_I2C_Master_Transmit(&hi2c2,L3G4200D_ADDR,tx_byte,1,1000);
-  
-  HAL_I2C_Master_Receive(&hi2c2,L3G4200D_ADDR,rx_byte,1,1000);
-  reg_bytes[9] = rx_byte[0];
-  
-  tx_byte[0] = INT1_TSH_YH;
-  HAL_I2C_Master_Transmit(&hi2c2,L3G4200D_ADDR,tx_byte,1,1000);
-  
-  HAL_I2C_Master_Receive(&hi2c2,L3G4200D_ADDR,rx_byte,1,1000);
-  reg_bytes[10] = rx_byte[0];
-  
-  tx_byte[0] = INT1_TSH_YL;
-  HAL_I2C_Master_Transmit(&hi2c2,L3G4200D_ADDR,tx_byte,1,1000);
-  
-  HAL_I2C_Master_Receive(&hi2c2,L3G4200D_ADDR,rx_byte,1,1000);
-  reg_bytes[11] = rx_byte[0];
-  
-  tx_byte[0] = INT1_TSH_ZH;
-  HAL_I2C_Master_Transmit(&hi2c2,L3G4200D_ADDR,tx_byte,1,1000);
-  
-  HAL_I2C_Master_Receive(&hi2c2,L3G4200D_ADDR,rx_byte,1,1000);
-  reg_bytes[12] = rx_byte[0];
-  
-  tx_byte[0] = INT1_TSH_ZL;
-  HAL_I2C_Master_Transmit(&hi2c2,L3G4200D_ADDR,tx_byte,1,1000);
-  
-  HAL_I2C_Master_Receive(&hi2c2,L3G4200D_ADDR,rx_byte,1,1000);
-  reg_bytes[13] = rx_byte[0];
-  
-  tx_byte[0] = INT1_DURATION;
-  HAL_I2C_Master_Transmit(&hi2c2,L3G4200D_ADDR,tx_byte,1,1000);
-  
-  HAL_I2C_Master_Receive(&hi2c2,L3G4200D_ADDR,rx_byte,1,1000);
-  reg_bytes[14] = rx_byte[0];
-  
-    tx_byte[0] = CTRL_REG1;
-  tx_byte[1] = 0x0F;
-  HAL_I2C_Master_Transmit(&hi2c2,L3G4200D_ADDR,tx_byte,2,1000);
-  HAL_Delay(5);
-*/
-  while (1)
-  {
-  //reg_bytes[1] = ReadReg(CTRL_REG1);
-  
-  HAL_Delay(10);
-  
-  xyz[0] = ReadReg(OUT_X_L);
-  xyz[1] = ReadReg(OUT_X_H);
-  xyz[2] = ReadReg(OUT_Y_L);
-  xyz[3] = ReadReg(OUT_Y_H);
-  xyz[4] = ReadReg(OUT_Z_L);
-  xyz[5] = ReadReg(OUT_Z_H);
-  
-  reg_bytes[1] = ReadReg(CTRL_REG1);
-  reg_bytes[2] = ReadReg(CTRL_REG2);
-  reg_bytes[3] = ReadReg(CTRL_REG3);
-  reg_bytes[4] = ReadReg(CTRL_REG4);
-  reg_bytes[5] = ReadReg(CTRL_REG5);
-  reg_bytes[6] = ReadReg(FIFO_CTRL_REG);
-  reg_bytes[7] = ReadReg(INT1_CFG);
-  reg_bytes[8] = ReadReg(INT1_TSH_XH);
-  reg_bytes[9] = ReadReg(INT1_TSH_XL);
-  reg_bytes[10] = ReadReg(INT1_TSH_YH);
-  reg_bytes[11] = ReadReg(INT1_TSH_YL);
-  reg_bytes[12] = ReadReg(INT1_TSH_ZH);
-  reg_bytes[13] = ReadReg(INT1_TSH_ZL);
-  reg_bytes[14] = ReadReg(INT1_DURATION);
-  
-  
-  
-  
-    
-    // Чтение данных АЦП
-    //ADC_ReadValues();
 
-    // Отрисовка верхней панели
-    //Menu_DrawHeaderPanel();
+  while (1)
+  {    
+    rx_byte[0] = 0;
+    temp = 0;
+    if(ReadReg(WHO_AM_I) == 0xD3)
+    {
+      TFT_WriteString(0, 20,C_ALIGN,GREEN,BACK_COLOR,"Init - OK",Calibri);
+      
+      WriteReg(CTRL_REG1,0xCF);
+      WriteReg(CTRL_REG2,0x01);
+      WriteReg(CTRL_REG3,0x00);
+      WriteReg(CTRL_REG4,0x00);
+      WriteReg(CTRL_REG5,0x02);
+      
+      temp = (51 - (ReadReg(OUT_TEMP) * 1.33))*10;
+      
+      TFT_WriteString(100, 60,NO_ALIGN,GREEN,BACK_COLOR,"Temp",Calibri);
+      TFT_WriteFloatValue(170, 60,NO_ALIGN,(int) temp,2,1,NON_SIGNED,"C",GREEN,BACK_COLOR,Calibri);
+      
+      while((ReadReg(STATUS_REG) & 0x08) == 0) {}
     
-    // Обработчик режимов работы
-    //Work_ModeHandler();
+      if ((ReadReg(STATUS_REG) & 0x80) == 0x80)
+      {
+        xyz[0] = ReadReg(OUT_X_L);
+        xyz[1] = ReadReg(OUT_X_H);
+        x = ((xyz[1] << 0x08) + xyz[0]);
+        x_f = x * 0.00875 * 100;
+        if (abs((int)x_f) > 300) x_out = (int) x_f;
+        else x_out = 0;
+          
+        TFT_WriteString(100, 100,NO_ALIGN,GREEN,BACK_COLOR,"x",Calibri);
+        TFT_WriteFloatValue(140, 100,NO_ALIGN,(int) x_out,2,2,SIGNED,"*/с",GREEN,BACK_COLOR,Calibri);
+      
+        xyz[2] = ReadReg(OUT_Y_L);
+        xyz[3] = ReadReg(OUT_Y_H);
+        y = ((xyz[3] << 0x08) + xyz[2]);
+        y_f = y * 0.00875 * 100;
+        if (abs((int)y_f) > 300) y_out = (int) y_f;
+        else y_out = 0;
+        
+        TFT_WriteString(100, 140,NO_ALIGN,GREEN,BACK_COLOR,"y",Calibri);
+        TFT_WriteFloatValue(140, 140,NO_ALIGN,(int) y_out,2,2,SIGNED,"*/с",GREEN,BACK_COLOR,Calibri);
+          
+          
+        xyz[4] = ReadReg(OUT_Z_L);
+        xyz[5] = ReadReg(OUT_Z_H);
+        z = ((xyz[5] << 0x08) + xyz[4]);
+        z_f = z * 0.00875 * 100;
+        if (abs((int)z_f) > 300) z_out = (int) z_f;
+        else z_out = 0;
+          
+        TFT_WriteString(100, 180,NO_ALIGN,GREEN,BACK_COLOR,"z",Calibri);
+        TFT_WriteFloatValue(140, 180,NO_ALIGN,(int) z_out,2,2,SIGNED,"*/с",GREEN,BACK_COLOR,Calibri);
+      }
+    }
+    else
+    {
+      TFT_WriteString(0, 20,C_ALIGN,ORANGE,BACK_COLOR,"Init - N/A",Calibri);
+      
+      TFT_WriteString(100, 60,NO_ALIGN,ORANGE,BACK_COLOR,"Temp",Calibri);
+      TFT_WriteString(170, 60,NO_ALIGN,ORANGE,BACK_COLOR,"N/A       ",Calibri);
     
-    // Отрисовка окон меню
-    //Menu_DrawWindows(Menu_SelectedItem);
+      TFT_WriteString(100, 100,NO_ALIGN,ORANGE,BACK_COLOR,"x",Calibri);
+      TFT_WriteString(140, 100,NO_ALIGN,ORANGE,BACK_COLOR,"      N/A            ",Calibri);  
     
-    // Отрисовка хранителя экрана
-    //Menu_ScreenSaver();
+      TFT_WriteString(100, 140,NO_ALIGN,ORANGE,BACK_COLOR,"y",Calibri);
+      TFT_WriteString(140, 140,NO_ALIGN,ORANGE,BACK_COLOR,"      N/A            ",Calibri);  
+      
+      TFT_WriteString(100, 180,NO_ALIGN,ORANGE,BACK_COLOR,"z",Calibri);
+      TFT_WriteString(140, 180,NO_ALIGN,ORANGE,BACK_COLOR,"      N/A            ",Calibri);  
+    }
+    
+    HAL_Delay(300);
   }
 }
 

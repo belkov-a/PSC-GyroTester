@@ -273,12 +273,15 @@ uint16_t TFT_PutFloatValue(uint16_t x, uint16_t y, // координата (верхний левый 
   char Num_String[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   
   // ≈сли есть знак
-  if ((Sign == SIGNED) && (Value < 0))
+  if (Sign == SIGNED)
   {
-    Num_String[DigWidth] = '-';
+    if (Value < 0) 
+    {
+      Num_String[DigWidth] = '-';
+      Value *= -1;
+    }
+    else           Num_String[DigWidth] = '+';
     DigWidth += 1;
-    
-    Value *= -1;
   }
   
   // ƒобавл€ем зап€тую и мантиссу, если нужно
@@ -314,14 +317,14 @@ uint16_t TFT_PutFloatValue(uint16_t x, uint16_t y, // координата (верхний левый 
   // ‘ормирование единицы измерени€
   if (Unit[0] > 0) 
   {
-    Num_String[DigWidth + Mantissa + Digit] = ' '; // пробел
+    Num_String[DigWidth + Mantissa + Digit+1] = ' '; // пробел
     
     uint8_t i = 1;
     
     // ¬ывод единицы измерени€
     while(*Unit) 
     {
-      Num_String[DigWidth + Mantissa + Digit + i] = *Unit;
+      Num_String[DigWidth + Mantissa + Digit + i+1] = *Unit;
       
       *Unit++;
       i++;

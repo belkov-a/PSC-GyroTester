@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\common\bin\cspybat" -f "C:\IAR_Projects\PSC_BurnGyro\EWARM\settings\PSC_BurPel_v6.PSC_BurPel_v6.general.xcl" --backend -f "C:\IAR_Projects\PSC_BurnGyro\EWARM\settings\PSC_BurPel_v6.PSC_BurPel_v6.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\common\bin\cspybat" -f "C:\Users\a.belkov\PSC-GyroTester\EWARM\settings\PSC_BurPel_v6.PSC_BurPel_v6.general.xcl" --backend -f "C:\Users\a.belkov\PSC-GyroTester\EWARM\settings\PSC_BurPel_v6.PSC_BurPel_v6.driver.xcl" 
 }
 else
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.1\common\bin\cspybat" -f "C:\IAR_Projects\PSC_BurnGyro\EWARM\settings\PSC_BurPel_v6.PSC_BurPel_v6.general.xcl" --debug_file=$debugfile --backend -f "C:\IAR_Projects\PSC_BurnGyro\EWARM\settings\PSC_BurPel_v6.PSC_BurPel_v6.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.2\common\bin\cspybat" -f "C:\Users\a.belkov\PSC-GyroTester\EWARM\settings\PSC_BurPel_v6.PSC_BurPel_v6.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\a.belkov\PSC-GyroTester\EWARM\settings\PSC_BurPel_v6.PSC_BurPel_v6.driver.xcl" 
 }

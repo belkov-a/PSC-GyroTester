@@ -12,15 +12,15 @@
         <ByteLimit>50</ByteLimit>
     </Stack>
     <StLinkDriver>
-        <stlinkserialNo>354B4E00</stlinkserialNo>
+        <stlinkserialNo>39460967</stlinkserialNo>
         <stlinkfoundProbes />
-        <stlinkResetStyle>4</stlinkResetStyle>
-        <stlinkResetStrategy>3</stlinkResetStrategy>
         <CStepIntDis>_ 0</CStepIntDis>
         <LeaveTargetRunning>_ 0</LeaveTargetRunning>
+        <stlinkResetStyle>4</stlinkResetStyle>
+        <stlinkResetStrategy>2</stlinkResetStrategy>
     </StLinkDriver>
     <DebugChecksum>
-        <Checksum>4120307335</Checksum>
+        <Checksum>330045922</Checksum>
     </DebugChecksum>
     <Exceptions>
         <StopOnUncaught>_ 0</StopOnUncaught>
@@ -37,10 +37,11 @@
     </struct_types>
     <array_types>
         <Fmt0>char[13]	5	0</Fmt0>
-        <Fmt1>uint16_t[2]	4	0</Fmt1>
-        <Fmt2>uint8_t[32]	1	0</Fmt2>
-        <Fmt3>uint8_t[4]	1	0</Fmt3>
-        <Fmt4>uint8_t[6]	1	0</Fmt4>
+        <Fmt1>char[15]	5	0</Fmt1>
+        <Fmt2>uint16_t[2]	4	0</Fmt2>
+        <Fmt3>uint8_t[32]	1	0</Fmt3>
+        <Fmt4>uint8_t[4]	1	0</Fmt4>
+        <Fmt5>uint8_t[6]	1	0</Fmt5>
     </array_types>
     <watch_formats>
         <Fmt0>{W}42:AntiSTOPHour_Counter[0]	3	0</Fmt0>
@@ -53,7 +54,14 @@
         <Fmt7>{W}42:SW2_P	3	0</Fmt7>
         <Fmt8>{W}42:ScreenSaverChange_Counter	3	0</Fmt8>
         <Fmt9>{W}42:Screw_Sensor_Counter[0]	3	0</Fmt9>
+        <Fmt10>{W}42:x	3	0</Fmt10>
     </watch_formats>
+    <DisassembleMode>
+        <mode>0</mode>
+    </DisassembleMode>
+    <Breakpoints2>
+        <Count>0</Count>
+    </Breakpoints2>
     <TermIOLog>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -63,22 +71,15 @@
         <LogFile>_ ""</LogFile>
         <Category>_ 0</Category>
     </LogFile>
+    <Aliases>
+        <A0>_ "C:\IAR_Projects\PSC_BurnStart_v3.4\PSC_BurnStart_v3.0\EWARM\HAL_Drivers\stm32f0xx_hal_gpio.c" ""</A0>
+        <Count>1</Count>
+        <SuppressDialog>0</SuppressDialog>
+    </Aliases>
     <CallStackLog>
         <Enabled>0</Enabled>
     </CallStackLog>
     <CallStackStripe>
         <ShowTiming>1</ShowTiming>
     </CallStackStripe>
-    <DisassembleMode>
-        <mode>0</mode>
-    </DisassembleMode>
-    <Breakpoints2>
-        <Bp0>_ 1 "EMUL_CODE" "{$PROJ_DIR$\main.c}.105.3" 0 0 1 "" 0 "" 0</Bp0>
-        <Count>1</Count>
-    </Breakpoints2>
-    <Aliases>
-        <A0>_ "C:\IAR_Projects\PSC_BurnStart_v3.4\PSC_BurnStart_v3.0\EWARM\HAL_Drivers\stm32f0xx_hal_gpio.c" ""</A0>
-        <Count>1</Count>
-        <SuppressDialog>0</SuppressDialog>
-    </Aliases>
 </settings>
